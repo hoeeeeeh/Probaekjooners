@@ -1,10 +1,10 @@
 function solution(a, b, g, s, w, t) {
-  let start = BigInt("400000000000000"); 
-  let end = BigInt(0);
+  let end = BigInt("400000000000000"); 
+  let start = BigInt(0);
 
-  while (end + BigInt(1) < start) {
+  while (end > start) {
     const mid = (end + start) / BigInt(2);
-
+    // BigInt / BigInt -> BigInt
     const length = g.length;
     let amount = BigInt(0);
     let amountGold = BigInt(0);
@@ -24,9 +24,12 @@ function solution(a, b, g, s, w, t) {
       amountSilver += tmp < BigInt(s[i]) ? tmp : BigInt(s[i]);
     }
 
-    if (amount >= BigInt(a) + BigInt(b) && amountGold >= BigInt(a) && amountSilver >= BigInt(b)) start = mid;
-    else end = mid;
+    if (amount >= BigInt(a) + BigInt(b) && amountGold >= BigInt(a) && amountSilver >= BigInt(b)) end = mid;
+    else start = mid + BigInt(1);
   }
-
-  return start;
+  // 0 1 2 3 4 5 6
+  // mid = 3
+  // 3이 만족X -> 0~3 -> 1 -> 0~1 / 1~3
+  // 3이 만족 -> 3~6
+  return end;
 }

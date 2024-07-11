@@ -1,6 +1,6 @@
 # [level 3] 금과 은 운반하기 - 86053 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/86053) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/86053?language=javascript) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 07월 09일 18:24:33
+2024년 07월 11일 12:21:18
 
 ### 문제 설명
 
