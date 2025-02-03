@@ -6,156 +6,113 @@ class Problem {
 }
 
 class PriorityQueue {
-    heap = new Queue();
-
     constructor(comparator) {
-        if(comparator) this.comparator = comparator.bind(this);
-        else this.comparator = (a, b) => this.heap.get(a) - this.heap.get(b);
+        if (comparator) {
+            this.comparator = comparator.bind(this);
+        } else {
+            this.comparator = (a, b) => this.heap[a] - this.heap[b];
+        }
+        this.heap = [];
     }
 
-    enqueue(value){
-        const heapLength = this.heap.push(value);
-        this.bubbleUp(heapLength - 1);
+    enqueue(value) {
+        this.heap.push(value);
+        this.bubbleUp(this.heap.length - 1);
     }
 
-    peek(){
-        return this.heap.get(0);
+    peek() {
+        return this.heap[0];
     }
 
-    dequeue(){
-        if(this.isEmpty()) return undefined;
-
-        const root = this.heap.get(0);
-        const leap = this.heap.pop();
-        if(this.isEmpty()) return root;
-        this.heap.set(0, leap);
-        this.bubbleDown(0);
-
+    dequeue() {
+        if (this.isEmpty()) return undefined;
+        const root = this.heap[0];
+        const leaf = this.heap.pop();
+        if (!this.isEmpty()) {
+            this.heap[0] = leaf;
+            this.bubbleDown(0);
+        }
         return root;
     }
 
-    bubbleUp(index_){
-        let index = index_;
-        while(index > 0) {
+    bubbleUp(index) {
+        while (index > 0) {
             const parentIndex = Math.floor((index - 1) / 2);
-            if(this.comparator(index, parentIndex) >= 0) break;
+            if (this.comparator(index, parentIndex) >= 0) break;
             this.swap(index, parentIndex);
             index = parentIndex;
         }
         return index;
     }
 
-    bubbleDown(index_){
-        let index = index_;
-        let smallestIndex = index;
-        while(smallestIndex < this.heap.length){
-
-            const leftChildIndex = 2 * index + 1;
-            const rightChildIndex = 2 * index + 2;
-
-            if(leftChildIndex < this.heap.length && this.comparator(leftChildIndex, smallestIndex) < 0){
-                smallestIndex = leftChildIndex;
+    bubbleDown(index) {
+        const length = this.heap.length;
+        let swapIndex = index;
+        while (true) {
+            const left = 2 * index + 1;
+            const right = 2 * index + 2;
+            if (left < length && this.comparator(left, swapIndex) < 0) {
+                swapIndex = left;
             }
-            if(rightChildIndex < this.heap.length && this.comparator(rightChildIndex, smallestIndex) < 0){
-                smallestIndex = rightChildIndex;
+            if (right < length && this.comparator(right, swapIndex) < 0) {
+                swapIndex = right;
             }
-
-            if(smallestIndex === index) break;
-            this.swap(index, smallestIndex);
-            index = smallestIndex;
+            if (swapIndex === index) break;
+            this.swap(index, swapIndex);
+            index = swapIndex;
         }
         return index;
     }
 
-    isEmpty(){
+    isEmpty() {
         return this.heap.length === 0;
     }
 
-    swap(i, j){
-        const restore = this.heap.get(i);
-        this.heap.set(i, this.heap.get(j));
-        this.heap.set(j, restore);
-    }
-}
-
-class Queue {
-    items = {}
-    head = 0;
-    tail = 0;
-
-    get length(){
-        return this.tail - this.head;
-    }
-
-    get(index){
-        return this.items[index + this.head];
-    }
-
-    set(index,  value){
-        this.items[index + this.head] = value;
-    }
-
-    constructor() {}
-
-    push(value){
-        this.items[this.tail] = value;
-        this.tail += 1;
-        return this.length;
-    }
-
-    pop(){
-        if(this.isEmpty()) return undefined;
-        const leaf = this.items[this.tail - 1];
-        delete this.items[this.tail - 1];
-
-        if(!this.isEmpty()) this.tail -= 1;
-        return leaf;
-    }
-
-    isEmpty(){
-        if(this.head !== this.tail) return false
-
-        this.head = this.tail = 0;
-        return true
-
+    swap(i, j) {
+        [this.heap[i], this.heap[j]] = [this.heap[j], this.heap[i]];
     }
 }
 
 class ProblemPriorityQueue extends PriorityQueue {
-    solvedProblems = {}
     constructor(comparator) {
         super(comparator);
-    }
-    solved(index){
-        this.solvedProblems[index] = true;
+        this.solvedProblems = {};
     }
 
-    peek(){
+    solved(problemNum) {
+        this.solvedProblems[problemNum] = true;
+    }
+
+    peek() {
         this.removeSolvedProblem();
         return super.peek();
     }
 
-    removeSolvedProblem(){
-        let peek = super.peek();
-        while(peek.num in this.solvedProblems){
+    removeSolvedProblem() {
+        let top = super.peek();
+        while (top && top.num in this.solvedProblems) {
             super.dequeue();
-            delete this.solvedProblems[peek.num];
-            peek = super.peek();
+            delete this.solvedProblems[top.num];
+            top = super.peek();
         }
     }
 }
 
-function minComparator(a, b){
-    if(this.heap.get(a).level !== this.heap.get(b).level) return this.heap.get(a).level - this.heap.get(b).level;
-    return this.heap.get(a).num - this.heap.get(b).num;
+function minComparator(a, b) {
+    if (this.heap[a].level !== this.heap[b].level) {
+        return this.heap[a].level - this.heap[b].level;
+    }
+    return this.heap[a].num - this.heap[b].num;
 }
 
-function maxComparator(a, b){
-    if(this.heap.get(a).level !== this.heap.get(b).level) return this.heap.get(b).level - this.heap.get(a).level;
-    return this.heap.get(b).num - this.heap.get(a).num;
+function maxComparator(a, b) {
+    if (this.heap[a].level !== this.heap[b].level) {
+        return this.heap[b].level - this.heap[a].level;
+    }
+    return this.heap[b].num - this.heap[a].num;
 }
 
-function add(P, L){
+function add(P, L) {
     minPPQ.enqueue(new Problem(P, L));
     maxPPQ.enqueue(new Problem(P, L));
 }
@@ -165,8 +122,8 @@ function solved(P) {
     maxPPQ.solved(P);
 }
 
-function recommend(x){
-    if(x === -1) {
+function recommend(x) {
+    if (x === -1) {
         return minPPQ.peek().num;
     } else {
         return maxPPQ.peek().num;
@@ -187,27 +144,25 @@ const minPPQ = new ProblemPriorityQueue(minComparator);
 const maxPPQ = new ProblemPriorityQueue(maxComparator);
 
 rl.on("line", (line) => {
-    if(N === -1){
+    if (N === -1) {
         N = parseInt(line);
         count = N;
     } else if (count > 0) {
-        const [num, level] = line.split(' ').map((n) => parseInt(n))
+        const [num, level] = line.split(' ').map(Number);
         add(num, level);
         count -= 1;
+    } else if (M === -1) {
+        M = parseInt(line);
     } else {
-        if(M === -1) M = parseInt(line);
-        else {
-            const [cmd, num1, num2] = line.split(' ');
-            if (cmd === 'recommend') {
-                const log = recommend(parseInt(num1));
-                answer.push(log);
-            } else if (cmd === 'solved') {
-                solved(parseInt(num1));
-            } else {
-                add(parseInt(num1), parseInt(num2))
-            }
+        const [cmd, num1, num2] = line.split(' ');
+        if (cmd === 'recommend') {
+            answer.push(recommend(parseInt(num1)));
+        } else if (cmd === 'solved') {
+            solved(parseInt(num1));
+        } else if (cmd === 'add') {
+            add(parseInt(num1), parseInt(num2));
         }
     }
 }).on("close", () => {
     console.log(answer.join('\n'));
-})
+});
