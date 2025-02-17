@@ -104,10 +104,10 @@ function solution(_N, M, score, efficiency) {
         pq.enqueue(se);
     })
 
-    while(N > 0) {
+    while(N > 0 && !pq.isEmpty()) {
         const [curScore, e, index] = pq.dequeue();
         score[index] += Math.min(100-curScore, e);
-        pq.enqueue([score[index], e, index]);
+        if(score[index] !== 100) pq.enqueue([score[index], e, index]);
         N -= 1;
     }
 
