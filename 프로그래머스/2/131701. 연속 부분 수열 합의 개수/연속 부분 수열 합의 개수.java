@@ -2,8 +2,6 @@ import java.util.HashSet;
 
 class Solution {
     public int solution(int[] elements) {
-        int answer = 0;
-        
         HashSet<Integer> s = new HashSet<>();
         
         int n = elements.length;
@@ -13,17 +11,15 @@ class Solution {
         System.arraycopy(elements, 0, circularElements, n, n);
         
         int[] accSum = new int[n * 2 + 1];
-        
         accSum[0] = 0;
         
-        
-        for(int i = 1; i < circularElements.length; i++) {
-            accSum[i] = accSum[i-1] + circularElements[i];
+        for(int i = 1; i < n * 2; i++) {
+            accSum[i] = accSum[i-1] + circularElements[i-1];
         }
         
         for(int i = 0; i < n; i++){
-            for(int j = 0; j < n; j++){
-                s.add(circularElements[i] + (accSum[i+j] - accSum[i]));
+            for(int j = 1; j <= n; j++){
+                s.add(accSum[i+j] - accSum[i]);
             }
         }
         
