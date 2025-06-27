@@ -1,7 +1,7 @@
 import java.util.*;
 
 class Solution {
-    public ArrayList<Integer> solution(int[] progresses, int[] speeds) {
+    public int[] solution(int[] progresses, int[] speeds) {
         ArrayList<Integer> answer = new ArrayList<>();
         int prev = -1;
         int acc = 1;
@@ -26,6 +26,6 @@ class Solution {
         
         answer.add(acc);
         
-        return answer;
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 }
