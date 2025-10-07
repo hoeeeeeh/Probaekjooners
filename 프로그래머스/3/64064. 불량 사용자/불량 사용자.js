@@ -1,38 +1,57 @@
 function solution(user_id, banned_id) {
-  const isMatch = (user, pattern) => {
-    if (user.length !== pattern.length) return false;
-    for (let i = 0; i < user.length; i++) {
-      if (pattern[i] !== '*' && pattern[i] !== user[i]) return false;
-    }
-    return true;
-  };
-
-  const candidates = banned_id.map((pat) => user_id.filter((u) => isMatch(u, pat)));
+    const candidates = banned_id.map((banId, idx) =>
+        user_id.filter(userId => match(userId, banId))
+    )
     
-  for (const c of candidates) {
-      if (c.length === 0) return 0;
-  }
-
-  candidates.sort((a, b) => a.length - b.length);
-
-  const used = new Set();
-  const combos = new Set();
-
-  const dfs = (i, chosen) => {
-    if (i === candidates.length) {
-      combos.add([...chosen].sort().join(','));
-      return;
+    const answer = new Set();
+    const cur = new Set();
+    const visited = new Set();
+    
+    dfs(0, cur, visited)
+    
+    return answer.size;
+    
+    function dfs(idx, cur, visited) {
+        if(idx === candidates.length) {
+            const combination = [...cur].sort().join(',');
+            if(answer.has(combination)) {
+                return false;
+            }
+            
+            answer.add(combination);
+            return true;
+        }
+        
+        for(let i = 0; i < candidates[idx].length; i++) {
+            const candidate = candidates[idx][i];
+            if(visited.has(candidate)) {
+                continue;
+            }
+            
+            cur.add(candidate);
+            visited.add(candidate);
+            dfs(idx + 1, cur, visited);
+            cur.delete(candidate);
+            visited.delete(candidate);
+            
+        }
     }
-    for (const uid of candidates[i]) {
-      if (used.has(uid)) continue;
-      used.add(uid);
-      chosen.push(uid);
-      dfs(i + 1, chosen);
-      chosen.pop();
-      used.delete(uid);
-    }
-  };
+}
 
-  dfs(0, []);
-  return combos.size;
+function match(userId, banId) {
+    if(userId.length !== banId.length) {
+        return false;
+    }
+    
+    for(let i = 0; i < userId.length; i++) {
+        if(banId[i] === '*') {
+            continue;
+        }
+        
+        if(banId[i] !== userId[i]) {
+            return false;
+        }
+    }
+    
+    return true;
 }
