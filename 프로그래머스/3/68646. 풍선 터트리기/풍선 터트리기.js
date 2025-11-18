@@ -1,34 +1,31 @@
 function solution(a) {
-    const startBase = [Infinity];
-    const endBase = [Infinity];
-
+    const startBase = Array(a.length).fill(Infinity);
+    const endBase = Array(a.length).fill(Infinity);
+    
     for(let i = 0; i < a.length - 1; i++) {
         if(startBase[i] > a[i]) {
-            startBase.push(a[i]);
+            startBase[i+1] = a[i];
         } else {
-            startBase.push(startBase[i]);
+            startBase[i+1] = startBase[i];
         }
     }
     
     for(let j = a.length - 1; j > 0; j--) {
-        if(endBase[endBase.length - 1] > a[j]) {
-            endBase.push(a[j]);
+        if(endBase[j] > a[j]) {
+            endBase[j - 1] = a[j];
         } else {
-            endBase.push(endBase[endBase.length - 1]);
+            endBase[j - 1] = endBase[j];
         }
     }
     
-    const endBaseReverse = endBase.reverse();
-    
     let answer = 0;
     for(let i = 0; i < a.length; i++) {
-        // console.log('i ==' , i, '//', startBase[i], a[i], endBaseReverse[i]);
         if(startBase[i] > a[i]) {
             answer += 1;
             continue;
         }
         
-        if(endBaseReverse[i] > a[i]) {
+        if(endBase[i] > a[i]) {
             answer += 1;
             continue;
         }
