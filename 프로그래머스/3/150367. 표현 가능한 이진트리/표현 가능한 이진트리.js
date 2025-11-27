@@ -23,14 +23,14 @@ function dfs(binary) {
     const m = Math.floor(binary.length / 2);
     const [leftChild, rightChild] = sliceBinary(binary);
     if(binary[m] === '0') {
-        return [...leftChild].every(c => c === '0') & [...rightChild].every(c => c === '0');
+        return [...leftChild].every(c => c === '0') && [...rightChild].every(c => c === '0');
     }
     
     if(binary.length === 1) {
         return true;
     }
     
-    return dfs(leftChild) & dfs(rightChild);
+    return dfs(leftChild) && dfs(rightChild);
 }
 
 function sliceBinary(binary) {
