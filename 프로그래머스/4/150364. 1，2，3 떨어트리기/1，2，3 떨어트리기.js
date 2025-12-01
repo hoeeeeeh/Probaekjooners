@@ -33,27 +33,29 @@ function solution(edges, target) {
         let nodeCount = nodes[i + 1].passCount;
         let t = target[i];
         
-        while(nodeCount > 0) {     
-            if(t === nodeCount || (t - 1) / (nodeCount - 1) <= 3) {
-                answer[i].push(1);
-                t -= 1;
+        while (nodeCount > 0) {
+            if (t === 3 && nodeCount === 1) {
+                answer[i].push(3);
+                t -= 3;
             }
-            
-            else if(t === 2) {
+
+            else if ((t - 3) >= (nodeCount - 1) && (t - 3) <= 3 * (nodeCount - 1)) {
+                answer[i].push(3);
+                t -= 3;
+            }
+
+            else if ((t - 2) >= (nodeCount - 1) && (t - 2) <= 3 * (nodeCount - 1)) {
                 answer[i].push(2);
                 t -= 2;
             }
 
             else {
-                answer[i].push(3);
-                t -= 3;
+                answer[i].push(1);
+                t -= 1;
             }
+
             nodeCount -= 1;
         }
-    }
-    
-    for(const a of answer) {
-        a.sort((a, b) => b - a);
     }
     
     const result = [];
