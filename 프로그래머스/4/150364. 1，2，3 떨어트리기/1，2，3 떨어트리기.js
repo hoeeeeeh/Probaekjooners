@@ -24,32 +24,25 @@ function solution(edges, target) {
     
     const answer = Array.from({ length: target.length }, () => []);
     
-    /*
-    2 를 넣어보고 target - 2 / passCount - 1 을 했을 때, 2를 초과하면 3을 넣어야한다.
-    1을 넣어보고 target - 1 / passCount - 1 을 했을 때, 1을 초과하면 2를 넣어야한다.
-    */
-    
     for(let i = 0; i < target.length; i++) {
         let nodeCount = nodes[i + 1].passCount;
         let t = target[i];
         
-        while (nodeCount > 0) {
-            if (t === 3 && nodeCount === 1) {
-                answer[i].push(3);
-                t -= 3;
+        while(nodeCount > 0) {
+            const rest = nodeCount - 1;
+
+            if (rest === 0) {
+                answer[i].push(t);
+                break;
             }
 
-            else if ((t - 3) >= (nodeCount - 1) && (t - 3) <= 3 * (nodeCount - 1)) {
+            if (can(t - 3, rest)) {
                 answer[i].push(3);
                 t -= 3;
-            }
-
-            else if ((t - 2) >= (nodeCount - 1) && (t - 2) <= 3 * (nodeCount - 1)) {
+            } else if (can(t - 2, rest)) {
                 answer[i].push(2);
                 t -= 2;
-            }
-
-            else {
+            } else {
                 answer[i].push(1);
                 t -= 1;
             }
@@ -65,6 +58,9 @@ function solution(edges, target) {
     
     return result;
     
+}
+function can(t, cnt) {
+    return cnt <= t && t <= 3 * cnt;
 }
 
 function compare(nodes) {
